@@ -18,7 +18,7 @@ const accessToken = (user) => {
 
 const validateToken = (payload) => {
     const tokenPayload = jwt.verify(payload.token, TOKEN.SECRET, (err, payload) => {
-        if (err) throw { status: 400, message: 'Invalid Token' }
+        if (err) throw { status: 401, message: 'Invalid Token' }
     
         return payload
       })
