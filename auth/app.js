@@ -3,7 +3,7 @@ const bodyParser = require("body-parser")
 const http = require("http")
 const logger = require("morgan")
 const routes = require("./routes")
-const { PORT } = require('../config.json')
+const { PORT } = require("./config.json")
 
 const app = express()
 

@@ -7,7 +7,8 @@ const create = (payload) => {
         name: payload.name,
         phone: payload.phone,
         password: generatePass(),
-        role: payload.role
+        role: payload.role,
+        created_at: new Date()
     }
 
     fs.readFile("./files/users.json", (err, data) => {
@@ -24,8 +25,8 @@ const create = (payload) => {
 
 const checkUserName = (payload) => {
     const data = fs.readFileSync("./files/users.json")
-
     let userList = JSON.parse(data)
+
     const checkUser = userList.users.filter((el) => {
         return el.name == payload.name
     })
@@ -37,4 +38,15 @@ const checkUserName = (payload) => {
     return true
 }
 
-module.exports = { create, checkUserName }
+const getUser = (payload) => {
+    const data = fs.readFileSync("./files/users.json")
+    let userList = JSON.parse(data)
+
+    const user = userList.users.filter((el) => {
+        return el.phone == payload.phone && el.password == payload.password
+    })
+
+    return user[0]
+}
+
+module.exports = { create, checkUserName, getUser }
