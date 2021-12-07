@@ -1,5 +1,7 @@
 const jwt = require("jsonwebtoken")
 
+const { TOKEN } = require("../config.json")
+
 const accessToken = (user) => {
     const token = jwt.sign({
         name: user.name,
@@ -7,11 +9,21 @@ const accessToken = (user) => {
         phone: user.phone,
         timestamp: user.created_at
     },
-    "secretkey",
+    TOKEN.SECRET,
     { expiresIn: '1d', algorithm: 'HS256' }
     )
   
     return { token }
 }
 
-module.exports = { accessToken }
+const validateToken = (payload) => {
+    const tokenPayload = jwt.verify(payload.token, TOKEN.SECRET, (err, payload) => {
+        if (err) throw { status: 400, message: 'Invalid Token' }
+    
+        return payload
+      })
+    
+      return tokenPayload
+}
+
+module.exports = { accessToken, validateToken }

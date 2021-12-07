@@ -1,6 +1,6 @@
 const { responseError, responseSuccess, validatePhone } = require("../helpers/utils")
 const { getUser } = require("../services/user.service")
-const { accessToken } = require("../services/token.service")
+const { accessToken, validateToken } = require("../services/token.service")
 
 const generateToken = (req, res) => {
     try {
@@ -18,4 +18,15 @@ const generateToken = (req, res) => {
     }
 }
 
-module.exports = { generateToken }
+const verifyToken = (req, res) => {
+    try {
+        const result = validateToken(req.body)
+        return responseSuccess(res, {
+            data: result
+        })
+    } catch (err) {
+        return responseError(res, err)
+    }
+}
+
+module.exports = { generateToken, verifyToken }
