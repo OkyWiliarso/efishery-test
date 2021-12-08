@@ -26,3 +26,12 @@ type CommodityUSD struct {
 type Currency struct {
 	Ratio float64 `json:"IDR_USD"`
 }
+
+type AggCommodity struct {
+	Provinsi string `json:"area_provinsi"`
+	Minggu   map[string]int
+	Max      float64 `json:"max"`
+	Min      float64 `json:"min"`
+	Avg      float64 `json:"average"`
+	Median   float64 `json:"median"`
+}

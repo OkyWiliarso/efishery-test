@@ -20,6 +20,7 @@ func main() {
 
 	commodity := commodity.NewCommodityHandler()
 	r.HandleFunc("/commodity/list", commodity.CommodityList).Methods("Get")
+	r.HandleFunc("/commodity/aggregate", commodity.AggCommodityList).Methods("Get")
 
 	listenPort := fmt.Sprintf(":%s", config.PORT)
 	fmt.Println("Server running on port", listenPort)

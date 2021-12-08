@@ -9,6 +9,7 @@ import (
 
 type ICommodity interface {
 	CommodityList(w http.ResponseWriter, r *http.Request)
+	AggCommodityList(w http.ResponseWriter, r *http.Request)
 }
 
 type CommodityService struct {
@@ -23,6 +24,15 @@ func NewCommodityHandler() ICommodity {
 
 func (s *CommodityService) CommodityList(w http.ResponseWriter, r *http.Request) {
 	commodities, err := s.service.GetAllCommodity()
+	if err != nil {
+		common.RespondError(w, http.StatusBadRequest, err.Error())
+	}
+
+	common.RespondJSON(w, http.StatusOK, commodities)
+}
+
+func (s *CommodityService) AggCommodityList(w http.ResponseWriter, r *http.Request) {
+	commodities, err := s.service.GetAggCommodity()
 	if err != nil {
 		common.RespondError(w, http.StatusBadRequest, err.Error())
 	}
