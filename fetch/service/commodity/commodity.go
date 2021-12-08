@@ -1,16 +1,17 @@
 package commodity
 
 import (
-	"encoding/json"
+	"fmt"
 	"log"
-	"net/http"
+	"strconv"
 
 	"github.com/OkyWiliarso/efishery-test/fetch/entity"
+	"github.com/OkyWiliarso/efishery-test/fetch/pkg/currency"
 	"github.com/OkyWiliarso/efishery-test/fetch/repo/commodity"
 )
 
 type ICommodityService interface {
-	GetAllCommodity() (res []entity.Commodity, err error)
+	GetAllCommodity() (res []entity.CommodityUSD, err error)
 }
 
 type CommodityService struct {
@@ -23,20 +24,40 @@ func NewCommodityService() ICommodityService {
 	}
 }
 
-func (s *CommodityService) GetAllCommodity() (res []entity.Commodity, err error) {
-	r, err := http.Get("https://stein.efishery.com/v1/storages/5e1edf521073e315924ceab4/list")
-	if err != nil {
-		log.Println(err)
+func (s *CommodityService) GetAllCommodity() (res []entity.CommodityUSD, err error) {
+	var commodities []entity.Commodity
 
+	commodities, err = s.CommodityRepo.FetchCommodity()
+	if err != nil || commodities == nil {
+		log.Println(err)
 		return res, err
 	}
-	defer r.Body.Close()
 
-	err = json.NewDecoder(r.Body).Decode(&res)
+	rate, err := currency.GetRate("IDR_USD")
 	if err != nil {
 		log.Println(err)
-
 		return res, err
+	}
+
+	for _, val := range commodities {
+		if val.Price == "" {
+			continue
+		}
+		price, _ := strconv.ParseFloat(val.Price, 64)
+
+		usdPrice := price * rate
+
+		res = append(res, entity.CommodityUSD{
+			UUID:         val.UUID,
+			Komoditas:    val.Komoditas,
+			AreaProvinsi: val.AreaProvinsi,
+			AreaKota:     val.AreaKota,
+			Size:         val.Size,
+			Price:        val.Price,
+			TglParsed:    val.TglParsed,
+			Timestamp:    val.Timestamp,
+			USDPrice:     fmt.Sprintf("$%f", usdPrice),
+		})
 	}
 
 	return res, nil
