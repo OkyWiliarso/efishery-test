@@ -6,6 +6,7 @@ import (
 	"strconv"
 
 	"github.com/OkyWiliarso/efishery-test/fetch/entity"
+	cachelib "github.com/OkyWiliarso/efishery-test/fetch/pkg/cache"
 	"github.com/OkyWiliarso/efishery-test/fetch/pkg/currency"
 	"github.com/OkyWiliarso/efishery-test/fetch/pkg/utils"
 	"github.com/OkyWiliarso/efishery-test/fetch/repo/commodity"
@@ -34,17 +35,23 @@ type tempComm struct {
 
 func (s *CommodityService) GetAllCommodity() (res []entity.CommodityUSD, err error) {
 	var commodities []entity.Commodity
-
+	var rate float64
 	commodities, err = s.CommodityRepo.FetchCommodity()
 	if err != nil || commodities == nil {
 		log.Println(err)
 		return res, err
 	}
 
-	rate, err := currency.GetRate("IDR_USD")
-	if err != nil {
-		log.Println(err)
-		return res, err
+	cachedRate := cachelib.GetCache("rate")
+	if cachedRate == nil {
+		rate, err := currency.GetRate("IDR_USD")
+		if err != nil {
+			log.Println(err)
+			return res, err
+		}
+		cachelib.SetCache("rate", rate)
+	} else {
+		rate = cachedRate.(float64)
 	}
 
 	for _, v := range commodities {
