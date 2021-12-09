@@ -8,8 +8,9 @@ import (
 )
 
 var (
-	PORT   string
-	ApiKey string
+	PORT    string
+	ApiKey  string
+	AuthURL string
 )
 
 func InitConfig() {
@@ -20,4 +21,5 @@ func InitConfig() {
 
 	PORT = os.Getenv("PORT")
 	ApiKey = os.Getenv("API_KEY")
+	AuthURL = os.Getenv("AUTH_URL")
 }

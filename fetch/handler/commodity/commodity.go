@@ -3,6 +3,7 @@ package commodity
 import (
 	"net/http"
 
+	"github.com/OkyWiliarso/efishery-test/fetch/middleware"
 	"github.com/OkyWiliarso/efishery-test/fetch/pkg/common"
 	"github.com/OkyWiliarso/efishery-test/fetch/service/commodity"
 )
@@ -32,6 +33,14 @@ func (s *CommodityService) CommodityList(w http.ResponseWriter, r *http.Request)
 }
 
 func (s *CommodityService) AggCommodityList(w http.ResponseWriter, r *http.Request) {
+	bearerToken := r.Header.Get("Authorization")
+	checkRole := middleware.CheckRole(bearerToken, "admin")
+
+	if !checkRole {
+		common.RespondError(w, http.StatusUnauthorized, "Unauthorized")
+		return
+	}
+
 	commodities, err := s.service.GetAggCommodity()
 	if err != nil {
 		common.RespondError(w, http.StatusBadRequest, err.Error())

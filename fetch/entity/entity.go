@@ -35,3 +35,18 @@ type AggCommodity struct {
 	Avg      float64 `json:"average"`
 	Median   float64 `json:"median"`
 }
+
+type AuthBody struct {
+	Token string `json:"token"`
+}
+
+type AuthResp struct {
+	Data User `json:"data"`
+}
+
+type User struct {
+	Name      string `json:"name"`
+	Role      string `json:"role"`
+	Phone     string `json:"phone"`
+	Timestamp string `json:"timestamp"`
+}
