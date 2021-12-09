@@ -11,6 +11,7 @@ var (
 	PORT    string
 	ApiKey  string
 	AuthURL string
+	Secret  string
 )
 
 func InitConfig() {
@@ -22,4 +23,5 @@ func InitConfig() {
 	PORT = os.Getenv("PORT")
 	ApiKey = os.Getenv("API_KEY")
 	AuthURL = os.Getenv("AUTH_URL")
+	Secret = os.Getenv("SECRET")
 }

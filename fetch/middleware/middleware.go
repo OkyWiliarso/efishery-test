@@ -22,7 +22,7 @@ func ValidateToken(next http.Handler) http.Handler {
 			return
 		}
 
-		token := getBearerToken(bearerToken)
+		token := GetBearerToken(bearerToken)
 
 		payload := entity.AuthBody{
 			Token: token,
@@ -49,7 +49,7 @@ func ValidateToken(next http.Handler) http.Handler {
 }
 
 func CheckRole(bearerToken string, role string) bool {
-	token := getBearerToken(bearerToken)
+	token := GetBearerToken(bearerToken)
 	auth := entity.AuthResp{}
 
 	payload := entity.AuthBody{
@@ -75,7 +75,7 @@ func CheckRole(bearerToken string, role string) bool {
 	return auth.Data.Role == role
 }
 
-func getBearerToken(bearerToken string) string {
+func GetBearerToken(bearerToken string) string {
 	var token string
 
 	if authHeader := bearerToken; authHeader != "" {
